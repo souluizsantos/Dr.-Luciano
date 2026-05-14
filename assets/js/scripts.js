@@ -1,0 +1,197 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ================================================
+    // NAVBAR — sombra ao rolar
+    // ================================================
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+            navbar.style.boxShadow = '0 8px 30px rgba(0,0,0,0.07)';
+        } else {
+            navbar.style.boxShadow = 'none';
+        }
+    }, { passive: true });
+
+
+    // ================================================
+    // MENU MOBILE — hamburguer
+    // ================================================
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function openMenu() {
+        hamburger.classList.add('active');
+        mobileMenu.classList.add('open');
+        document.body.classList.add('menu-open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        mobileMenu.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeMenu() {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        document.body.classList.remove('menu-open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+    }
+
+    hamburger.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    document.querySelectorAll('.mobile-link, .mobile-cta').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+            closeMenu();
+        }
+    });
+
+
+    // ================================================
+    // SMOOTH SCROLL — âncoras internas
+    // ================================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetSelector = this.getAttribute('href');
+            if (targetSelector === '#') return;
+            const target = document.querySelector(targetSelector);
+            if (target) {
+                e.preventDefault();
+                closeMenu();
+                window.scrollTo({
+                    top: target.offsetTop - 88,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+
+    // ================================================
+    // SCROLL REVEAL — seções entram suavemente
+    // ================================================
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('section > .container').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(28px)';
+        el.style.transition = 'opacity 0.85s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.85s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        revealObserver.observe(el);
+    });
+
+
+    // ================================================
+    // CONTADORES ANIMADOS
+    // ================================================
+    const counters = document.querySelectorAll('.counter');
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const target = parseInt(el.dataset.target, 10);
+            const duration = 1400;
+            const steps = 50;
+            const increment = target / steps;
+            let current = 0;
+            let step = 0;
+
+            const timer = setInterval(() => {
+                step++;
+                current = Math.min(Math.round(increment * step), target);
+                el.textContent = current;
+                if (current >= target) clearInterval(timer);
+            }, duration / steps);
+
+            counterObserver.unobserve(el);
+        });
+    }, { threshold: 0.6 });
+
+    counters.forEach(el => counterObserver.observe(el));
+
+
+    // ================================================
+    // FAQ — acordeão
+    // ================================================
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const isOpen = item.classList.contains('active');
+
+            document.querySelectorAll('.faq-item.active').forEach(openItem => {
+                openItem.classList.remove('active');
+                openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            });
+
+            if (!isOpen) {
+                item.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+
+    // ================================================
+    // DEPOIMENTOS — dots + scroll-sync mobile
+    // ================================================
+    const wrapper = document.getElementById('testimonialsWrapper');
+    const dots = document.querySelectorAll('.testimonial-dot');
+
+    if (wrapper && dots.length) {
+        const testimonials = wrapper.querySelectorAll('.testimonial');
+
+        function activateDot(index) {
+            dots.forEach(d => d.classList.remove('active'));
+            if (dots[index]) dots[index].classList.add('active');
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.dataset.index, 10);
+                const target = testimonials[index];
+                if (target) {
+                    wrapper.scrollTo({
+                        left: target.offsetLeft - 20,
+                        behavior: 'smooth'
+                    });
+                }
+                activateDot(index);
+            });
+        });
+
+        let scrollTimer;
+        wrapper.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                const scrollLeft = wrapper.scrollLeft;
+                let closest = 0;
+                let minDist = Infinity;
+                testimonials.forEach((t, i) => {
+                    const dist = Math.abs(t.offsetLeft - scrollLeft);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = i;
+                    }
+                });
+                activateDot(closest);
+            }, 80);
+        }, { passive: true });
+    }
+
+});
