@@ -96,6 +96,15 @@ nav {
     letter-spacing: -0.3px;
     position: relative;
     z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    height: 36px;
+    width: auto;
+    display: block;
 }
 
 .footer-logo { font-size: 1.8rem; margin-bottom: 14px; }
@@ -1263,6 +1272,9 @@ footer {
 
     .footer-col p i { min-width: auto; }
 
+    /* Garante que o copyright não fique sob o botão flutuante do WhatsApp */
+    .footer-bottom { padding-bottom: 80px; }
+
     .cta-box { padding: 56px 28px; }
 
     .faq-question {
@@ -1273,6 +1285,13 @@ footer {
     .faq-answer p { padding: 0 22px 20px; }
 
     .services-grid { grid-template-columns: 1fr; }
+
+    /* Seta do "Como Funciona" centralizada ao empilhar verticalmente */
+    .step-connector {
+        display: flex;
+        justify-content: center;
+        padding: 0;
+    }
 }
 
 /* ============================================
@@ -1280,6 +1299,15 @@ footer {
    ============================================ */
 @media (max-width: 480px) {
     .hero h1 { letter-spacing: -1.5px; }
+
+    /* Mini-tag não quebra linha em telas pequenas */
+    .mini-tag {
+        font-size: 0.68rem;
+        letter-spacing: 1px;
+        gap: 9px;
+    }
+
+    .mini-tag::before { width: 18px; }
 
     .hero-buttons {
         flex-direction: column;
@@ -1305,4 +1333,16 @@ footer {
     .testimonial { width: 86vw; }
 
     .step-num { font-size: 4.5rem; }
+
+    /* Pills de cidades em coluna única — evita quebra irregular */
+    .cities {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .city {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
 }

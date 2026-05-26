@@ -96,34 +96,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+
+
     // ================================================
-    // CONTADORES ANIMADOS
+    // RASTREAMENTO — cliques em links WhatsApp
+    // Dispara fbq('track','Contact') e gtag event quando
+    // o Meta Pixel / GA4 estiverem ativos (IDs inseridos no <head>)
     // ================================================
-    const counters = document.querySelectorAll('.counter');
-
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target;
-            const target = parseInt(el.dataset.target, 10);
-            const duration = 1400;
-            const steps = 50;
-            const increment = target / steps;
-            let current = 0;
-            let step = 0;
-
-            const timer = setInterval(() => {
-                step++;
-                current = Math.min(Math.round(increment * step), target);
-                el.textContent = current;
-                if (current >= target) clearInterval(timer);
-            }, duration / steps);
-
-            counterObserver.unobserve(el);
+    document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+        link.addEventListener('click', () => {
+            if (typeof fbq === 'function') {
+                fbq('track', 'Contact');
+                fbq('track', 'Schedule');
+            }
+            if (typeof gtag === 'function') {
+                gtag('event', 'whatsapp_click', {
+                    event_category: 'engagement',
+                    event_label: link.textContent.trim() || 'whatsapp_button'
+                });
+            }
         });
-    }, { threshold: 0.6 });
-
-    counters.forEach(el => counterObserver.observe(el));
+    });
 
 
     // ================================================
