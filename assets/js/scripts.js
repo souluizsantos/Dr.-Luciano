@@ -99,6 +99,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ================================================
+    // STICKY CTA — aparece após o hero sair do viewport (mobile)
+    // ================================================
+    const stickyCta = document.getElementById('stickyCta');
+    const heroSection = document.querySelector('.hero');
+
+    if (stickyCta && heroSection) {
+        const stickyObserver = new IntersectionObserver(
+            ([entry]) => {
+                stickyCta.style.display = entry.isIntersecting ? 'none' : '';
+            },
+            { threshold: 0.1 }
+        );
+        stickyObserver.observe(heroSection);
+    }
+
+
+    // ================================================
     // RASTREAMENTO — cliques em links WhatsApp
     // Dispara fbq('track','Contact') e gtag event quando
     // o Meta Pixel / GA4 estiverem ativos (IDs inseridos no <head>)

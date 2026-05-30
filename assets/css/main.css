@@ -1112,6 +1112,27 @@ footer {
 }
 
 /* ============================================
+   STICKY CTA — mobile only, oculta acima da dobra
+   ============================================ */
+.sticky-cta {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    z-index: 997;
+}
+
+.sticky-cta .btn-primary {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ============================================
    WHATSAPP FLUTUANTE
    ============================================ */
 .whatsapp {
@@ -1253,7 +1274,10 @@ footer {
     #unidades  { padding: 70px 0; }
     .section-cta { padding: 60px 0; }
 
-    .hero h1   { letter-spacing: -2px; text-align: left; width: 100%; }
+    .hero h1   { letter-spacing: -2px; text-align: left; width: 100%; line-height: 1.05; }
+
+    /* Touch target adequado nos CTAs de serviço (eram 24px) */
+    .service-cta { padding: 14px 0; min-height: 44px; }
 
     .section-head-left { max-width: 100%; }
 
@@ -1277,6 +1301,10 @@ footer {
     /* Garante que o copyright não fique sob o botão flutuante do WhatsApp */
     .footer-bottom { padding-bottom: 80px; }
 
+    /* Botão "Agendar minha avaliação" centralizado no Sobre */
+    .about-cta { text-align: center; }
+    .about-cta .btn-primary { display: inline-flex; }
+
     .cta-box { padding: 56px 28px; }
 
     .faq-question {
@@ -1293,6 +1321,20 @@ footer {
         display: flex;
         justify-content: center;
         padding: 0;
+    }
+
+    /* Dots dos depoimentos — área de toque 44×44px via pseudo-elemento */
+    .testimonial-dot {
+        position: relative;
+    }
+    .testimonial-dot::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 44px;
+        height: 44px;
     }
 }
 
@@ -1328,10 +1370,9 @@ footer {
     .hero-buttons { flex-direction: column; align-items: stretch; }
     .hero-buttons a { justify-content: center; }
 
-    .hero-image img { height: 42vh; }
-
-    .floating-card { width: 190px; padding: 18px 22px; }
-    .floating-card h3 { font-size: 1.8rem; }
+    /* Hero: foto centrada no rosto; floating card oculto no mobile */
+    .hero-image img { height: 42vh; object-position: 50% 15%; }
+    .floating-card  { display: none; }
 
     /* — Cards de tratamento: padding interno compacto — */
     .service { padding: 36px 26px; }
@@ -1410,4 +1451,11 @@ footer {
 
     /* Nota WhatsApp: ícone inline + texto centralizado */
     .cities-note { display: block; text-align: center; }
+
+    /* Sticky CTA: ativa no mobile, botão flutuante oculto */
+    .sticky-cta { display: block; }
+    .whatsapp   { display: none; }
+
+    /* Footer: padding extra para não ocultar conteúdo atrás da sticky bar */
+    .footer-bottom { padding-bottom: 80px; }
 }
