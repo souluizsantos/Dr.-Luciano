@@ -190,11 +190,11 @@ nav {
     background: var(--primary);
     z-index: 999;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     opacity: 0;
     visibility: hidden;
-    overflow-y: auto;    /* evita overflow em telas pequenas */
+    overflow-y: auto;
     transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
@@ -206,33 +206,52 @@ nav {
 .mobile-menu-inner {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 28px;
-    text-align: center;
-    padding: 40px 20px;
-    transform: translateY(20px);
-    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) 0.08s;
+    align-items: flex-start;
+    gap: 0;
+    text-align: left;
+    padding: 108px 48px 48px;
+    width: 100%;
+    transform: translateX(-28px);
+    transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1) 0.08s;
 }
 
-.mobile-menu.open .mobile-menu-inner { transform: translateY(0); }
+.mobile-menu.open .mobile-menu-inner { transform: translateX(0); }
 
 .mobile-link {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 500;
-    color: rgba(255,255,255,0.65);
-    letter-spacing: -0.5px;
-    transition: var(--transition);
+    color: rgba(255,255,255,0.5);
+    letter-spacing: -0.3px;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+    padding: 18px 0;
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
-.mobile-link:hover { color: white; }
+.mobile-link:first-child { border-top: 1px solid rgba(255,255,255,0.07); }
+
+.mobile-link:hover { color: white; padding-left: 14px; }
 
 .mobile-cta {
-    margin-top: 8px;
-    font-size: 1rem;
-    display: inline-flex;
+    margin-top: 44px;
+    width: 100%;
+    justify-content: center;
+    font-size: 0.93rem;
+    display: flex;
     align-items: center;
     gap: 10px;
+}
+
+/* Especificidade 0-2-0 garante gold sobre .btn-primary */
+.mobile-menu-inner .mobile-cta {
+    background: var(--accent);
+    color: var(--primary);
+    padding: 17px 32px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    box-shadow: 0 8px 28px rgba(184,150,106,0.25);
 }
 
 /* ============================================
@@ -1254,12 +1273,19 @@ footer {
 
     /* FAQ fica full-width no tablet */
     .faq-list { max-width: 100%; margin: 0 auto; }
+
+    /* Tratamentos: 2x2 no tablet (iPad Air 13 = ~1024px em portrait) */
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* CTA do Sobre centralizado */
+    .about-cta { text-align: center; }
+    .about-cta .btn-primary { display: inline-flex; }
 }
 
 /* ============================================
-   RESPONSIVO — 900px — hamburger aparece
+   RESPONSIVO — 1024px — hamburger aparece (mobile + tablet)
    ============================================ */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .menu      { display: none; }
     .hamburger { display: flex; }
 }
@@ -1314,7 +1340,7 @@ footer {
 
     .faq-answer p { padding: 0 22px 20px; }
 
-    .services-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* Seta do "Como Funciona" centralizada ao empilhar verticalmente */
     .step-connector {
@@ -1374,7 +1400,8 @@ footer {
     .hero-image img { height: 42vh; object-position: 50% 15%; }
     .floating-card  { display: none; }
 
-    /* — Cards de tratamento: padding interno compacto — */
+    /* — Cards de tratamento: 1 coluna no mobile, padding compacto — */
+    .services-grid { grid-template-columns: 1fr; }
     .service { padding: 36px 26px; }
 
     /* — Como funciona: steps mais compactos — */
