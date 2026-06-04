@@ -117,19 +117,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ================================================
     // RASTREAMENTO — cliques em links WhatsApp
-    // Dispara fbq('track','Contact') e gtag event quando
-    // o Meta Pixel / GA4 estiverem ativos (IDs inseridos no <head>)
+    // Dispara fbq Lead/Contact e gtag event quando
+    // o Meta Pixel / GA4 estiverem ativos
     // ================================================
     document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
         link.addEventListener('click', () => {
+            var href = link.href || '';
+            var category = 'consulta';
+            var value = 350;
+
+            if (href.includes('implantes')) { category = 'implante'; value = 3500; }
+            else if (href.includes('ortodontico') ||
+                href.includes('ortodontia')) { category = 'ortodontia'; value = 2500; }
+            else if (href.includes('estetica') ||
+                href.includes('est%C3%A9tica')) { category = 'estetica'; value = 1500; }
+            else if (href.includes('proteses') ||
+                href.includes('pr%C3%B3teses')) { category = 'protese'; value = 2000; }
+
             if (typeof fbq === 'function') {
+                fbq('track', 'Lead', { content_category: category, currency: 'BRL', value: value });
                 fbq('track', 'Contact');
-                fbq('track', 'Schedule');
             }
+
             if (typeof gtag === 'function') {
                 gtag('event', 'whatsapp_click', {
                     event_category: 'engagement',
-                    event_label: link.textContent.trim() || 'whatsapp_button'
+                    event_label: link.textContent.trim() || 'whatsapp_button',
+                    value: value
                 });
             }
         });
